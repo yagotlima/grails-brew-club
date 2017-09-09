@@ -39,7 +39,9 @@ dependencies {
     compile "org.hibernate:hibernate-core:5.1.3.Final"
     compile "org.hibernate:hibernate-ehcache:5.1.3.Final"
     console "org.grails:grails-console"
-    compile 'org.grails.plugins:spring-security-core:3.1.2' // Spring Security
+    // Spring Security:
+    compile 'org.grails.plugins:spring-security-core:3.1.2'
+    compile 'org.grails.plugins:spring-security-ui:3.0.0.M2'
     profile "org.grails.profiles:web"
     runtime "com.bertramlabs.plugins:asset-pipeline-grails:2.14.1"
     runtime "com.h2database:h2"
