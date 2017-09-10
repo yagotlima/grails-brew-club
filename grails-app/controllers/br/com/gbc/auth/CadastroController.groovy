@@ -7,29 +7,51 @@ import grails.validation.Validateable
 class CadastroController {
 
     def index() {
+        def command = flash.chainedCommand ?: new CadastroCommand()
+        [cadastroCommandInstance: command]
     }
 
-    def registrar() {
-        def nome = params.nome
-        def email = params.email
-        def senha = params.senha
-        def senha2 = params.senha2
-
-        if(senha != senha2) {
-            flash.erro = "Senha não bate com a confirmação."
-            flash.chainedParams = [email: email]
+    def registrar(CadastroCommand command) {
+        if(!command || command.hasErrors()) {
+            flash.message = "Falha ao cadastrar usuário."
+            flash.chainedCommand = command
             redirect action: 'index'
+            return
         }
 
         def cargo = Cargo.findByAuthority('ROLE_USER')
         def usuario
         Usuario.withTransaction {
-            usuario = new Usuario(nome: nome, username: email, password: senha)
-                    .save(failOnError: true)
+            usuario = command.usuario.save(failOnError: true)
             UsuarioCargo.create(usuario, cargo, true)
         }
 
         render view: 'concluido', model: [usuario: usuario]
+    }
+}
+
+class CadastroCommand implements grails.validation.Validateable {
+    String nome
+    String email
+    String senha
+    String senha2
+
+    static constraints = {
+        nome nullable: false, blank: false, size: 1..255
+        email nullable: false, blank: false, email: true, size: 1..255
+        senha nullable: false, blank: false, size: 6..255
+        senha2 nullable: false, blank: false, validator: { val, obj ->
+            if(val != obj.senha)
+                'confirmacaoSenhaDiverge'
+        }
+    }
+
+    Usuario getUsuario() {
+        new Usuario(
+            nome: nome,
+            username: email,
+            password: senha
+        )
     }
 }
 
