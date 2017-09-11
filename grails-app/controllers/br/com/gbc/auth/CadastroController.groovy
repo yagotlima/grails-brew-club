@@ -5,6 +5,7 @@ import grails.validation.Validateable
 
 @Secured('IS_AUTHENTICATED_ANONYMOUSLY')
 class CadastroController {
+    def springSecurityService
 
     def index() {
         def command = flash.chainedCommand ?: new CadastroCommand()
@@ -25,6 +26,8 @@ class CadastroController {
             usuario = command.usuario.save(failOnError: true)
             UsuarioCargo.create(usuario, cargo, true)
         }
+
+        springSecurityService.reauthenticate usuario.username
 
         render view: 'concluido', model: [usuario: usuario]
     }
