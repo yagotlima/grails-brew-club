@@ -33,7 +33,7 @@ class CadastroController {
     }
 }
 
-class CadastroCommand implements grails.validation.Validateable {
+class CadastroCommand implements Validateable {
     String nome
     String email
     String senha
