@@ -29,7 +29,7 @@
             <g:form resource="${this.publicacao}" method="PUT">
                 <g:hiddenField name="version" value="${this.publicacao?.version}" />
                 <fieldset class="form">
-                    <f:all bean="publicacao"/>
+                    <g:render template="form" model="${[publicacao: publicacao]}" />
                 </fieldset>
                 <fieldset class="buttons">
                     <input class="save" type="submit" value="${message(code: 'default.button.update.label', default: 'Update')}" />
